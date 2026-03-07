@@ -1,0 +1,56 @@
+backend:
+  name: github
+  repo: qamersajid/baili-magazine
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+site_url: https://baili-magazine.pages.dev
+logo_url: /favicon.svg
+
+collections:
+  - name: "issues"
+    label: "Monthly Issues"
+    folder: "src/content/issues"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Month", name: "month", widget: "string" }
+      - { label: "Year", name: "year", widget: "number" }
+      - { label: "Issue Date", name: "issueDate", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Editorial Note", name: "editorialNote", widget: "text" }
+      - { label: "Featured Writing Slugs", name: "featuredWritingSlugs", widget: "list" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "daily"
+    label: "Daily Contributions"
+    folder: "src/content/daily"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Author Slug", name: "authorSlug", widget: "string" }
+      - { label: "Author Name", name: "authorName", widget: "string" }
+      - { label: "Genre", name: "genre", widget: "select", options: ["poetry", "prose", "essay", "story", "ghazal", "nazm", "article"] }
+      - { label: "Language", name: "language", widget: "string", default: "Haryanvi" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Publish Date", name: "publishDate", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false }
+      - { label: "Issue Slug", name: "issueSlug", widget: "string", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Section Label", name: "sectionLabel", widget: "hidden", default: "Daily Contribution" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "authors"
+    label: "Authors"
+    folder: "src/content/authors"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Hometown", name: "hometown", widget: "string", required: false }
+      - { label: "Bio", name: "bio", widget: "text" }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }

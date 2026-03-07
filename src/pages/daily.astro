@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('daily')).sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+---
+<BaseLayout title="Daily Contributions | Baili">
+  <h1>Daily Contributions</h1>
+  <div class="grid grid-2">
+    {posts.map(post => (
+      <article class="card">
+        <span class="pill">{post.data.genre}</span>
+        <h2><a href={`/writings/${post.slug}`}>{post.data.title}</a></h2>
+        <p class="muted">{post.data.authorName} · {post.data.publishDate.toLocaleDateString('en-GB')}</p>
+        <p>{post.data.summary}</p>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

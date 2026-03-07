@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const authors = await getCollection('authors');
+  return authors.map((author) => ({ params: { slug: author.slug }, props: { author } }));
+}
+
+const { author } = Astro.props;
+const posts = (await getCollection('daily')).filter(p => p.data.authorSlug === author.slug).sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+const { Content } = await author.render();
+---
+<BaseLayout title={`${author.data.name} | Baili`}>
+  <section class="hero">
+    <h1>{author.data.name}</h1>
+    <p class="muted">{author.data.hometown}</p>
+    <div class="content"><Content /></div>
+  </section>
+  <section style="margin-top:2rem;">
+    <h2>Published works</h2>
+    <div class="grid grid-2">
+      {posts.map(post => (
+        <article class="card">
+          <span class="pill">{post.data.genre}</span>
+          <h3><a href={`/writings/${post.slug}`}>{post.data.title}</a></h3>
+          <p>{post.data.summary}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

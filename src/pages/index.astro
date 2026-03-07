@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const daily = (await getCollection('daily')).sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+const issues = (await getCollection('issues')).sort((a, b) => b.data.issueDate.valueOf() - a.data.issueDate.valueOf());
+const authors = (await getCollection('authors')).filter(a => a.data.featured).slice(0, 3);
+const featured = daily.filter(post => post.data.featured).slice(0, 3);
+const recent = daily.slice(0, 6);
+const currentIssue = issues[0];
+---
+<BaseLayout>
+  <section class="hero">
+    <div class="grid grid-2">
+      <div>
+        <h1>Haryanvi lekh, kavita aur lok-awaz ka digital ghar.</h1>
+        <p class="muted">Maheena War "Baili" publishes original Haryanvi prose and poetry, highlights daily contributions, and preserves a proper monthly archive.</p>
+        <p>
+          <a class="button" href="/submit">Submit original work</a>
+        </p>
+      </div>
+      <div class="card">
+        <h2>Current issue</h2>
+        {currentIssue ? (
+          <>
+            <p><strong>{currentIssue.data.title}</strong></p>
+            <p class="muted">{currentIssue.data.month} {currentIssue.data.year}</p>
+            <p>{currentIssue.data.editorialNote}</p>
+            <a href={`/archive/${currentIssue.slug}`}>Open issue</a>
+          </>
+        ) : <p>Add the first monthly issue from the CMS.</p>}
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top:2rem;">
+    <div class="section-title"><h2>Featured today</h2><a href="/daily">View all</a></div>
+    <div class="grid grid-3">
+      {featured.map(post => (
+        <article class="card">
+          <span class="pill">{post.data.genre}</span>
+          <h3><a href={`/writings/${post.slug}`}>{post.data.title}</a></h3>
+          <p class="muted">By {post.data.authorName}</p>
+          <p>{post.data.summary}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section style="margin-top:2rem;">
+    <div class="section-title"><h2>Recent contributions</h2></div>
+    <div class="grid grid-2">
+      {recent.map(post => (
+        <article class="card">
+          <span class="pill">{post.data.genre}</span>
+          <h3><a href={`/writings/${post.slug}`}>{post.data.title}</a></h3>
+          <p class="muted">{post.data.publishDate.toLocaleDateString('en-GB')} · {post.data.authorName}</p>
+          <p>{post.data.summary}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section style="margin-top:2rem;">
+    <div class="section-title"><h2>Featured creators</h2><a href="/authors">All creators</a></div>
+    <div class="grid grid-3">
+      {authors.map(author => (
+        <article class="author-card">
+          <h3><a href={`/authors/${author.slug}`}>{author.data.name}</a></h3>
+          <p class="muted">{author.data.hometown}</p>
+          <p>{author.data.bio}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

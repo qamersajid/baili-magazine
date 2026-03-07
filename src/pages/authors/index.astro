@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const authors = (await getCollection('authors')).sort((a, b) => a.data.name.localeCompare(b.data.name));
+---
+<BaseLayout title="Creators | Baili">
+  <h1>Original Creators</h1>
+  <div class="grid grid-3">
+    {authors.map(author => (
+      <article class="author-card">
+        <h2><a href={`/authors/${author.slug}`}>{author.data.name}</a></h2>
+        <p class="muted">{author.data.hometown}</p>
+        <p>{author.data.bio}</p>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

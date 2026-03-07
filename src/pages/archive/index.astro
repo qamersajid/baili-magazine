@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const issues = (await getCollection('issues')).sort((a, b) => b.data.issueDate.valueOf() - a.data.issueDate.valueOf());
+---
+<BaseLayout title="Monthly Archive | Baili">
+  <h1>Monthly Archive</h1>
+  <div class="grid grid-3">
+    {issues.map(issue => (
+      <article class="issue-card">
+        {issue.data.coverImage && <img class="cover" src={issue.data.coverImage} alt={issue.data.title} />}
+        <h2><a href={`/archive/${issue.slug}`}>{issue.data.title}</a></h2>
+        <p class="muted">{issue.data.month} {issue.data.year}</p>
+        <p>{issue.data.editorialNote}</p>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

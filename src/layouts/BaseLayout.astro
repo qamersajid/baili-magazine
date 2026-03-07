@@ -1,0 +1,112 @@
+---
+const { title = 'Maheena War "Baili"', description = 'Haryanvi monthly web magazine' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <style>
+      :root {
+        --bg: #f7f2e7;
+        --paper: #fffaf1;
+        --ink: #2e241b;
+        --muted: #6f5b48;
+        --accent: #7b4f2f;
+        --line: #d9cbb8;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Georgia, 'Noto Serif Devanagari', serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .container { width: min(1100px, 92vw); margin: 0 auto; }
+      header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255,250,241,.9);
+        position: sticky;
+        top: 0;
+        backdrop-filter: blur(8px);
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+      }
+      .brand { font-size: 1.35rem; font-weight: 700; }
+      .nav-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+      main { padding: 2rem 0 4rem; }
+      .hero, .card, .issue-card, .author-card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 1.2rem;
+        box-shadow: 0 6px 20px rgba(76, 51, 26, 0.06);
+      }
+      .hero { padding: 2rem; }
+      .grid { display: grid; gap: 1rem; }
+      .grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+      .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+      h1, h2, h3 { margin-top: 0; }
+      .muted { color: var(--muted); }
+      .pill {
+        display: inline-block;
+        padding: .2rem .6rem;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-size: .85rem;
+        margin-right: .4rem;
+      }
+      footer { border-top: 1px solid var(--line); padding: 2rem 0 3rem; color: var(--muted); }
+      .section-title { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+      .content p { line-height: 1.7; }
+      .cover {
+        width: 100%;
+        aspect-ratio: 4/5;
+        object-fit: cover;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+      }
+      .button {
+        display: inline-block;
+        background: var(--accent);
+        color: white;
+        padding: .8rem 1rem;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <a class="brand" href="/">Maheena War "Baili"</a>
+          <div class="nav-links">
+            <a href="/daily">Daily Contributions</a>
+            <a href="/archive">Monthly Archive</a>
+            <a href="/authors">Creators</a>
+            <a href="/submit">Submit</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <slot />
+      </div>
+    </main>
+    <footer>
+      <div class="container">
+        Baili is a Haryanvi web magazine for original prose and poetry. Built for Cloudflare Pages + Decap CMS.
+      </div>
+    </footer>
+  </body>
+</html>
