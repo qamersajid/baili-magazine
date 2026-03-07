@@ -2,13 +2,80 @@
 const { title = 'Maheena War "Baili"', description = 'Haryanvi monthly web magazine' } = Astro.props;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-script="roman">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&family=Noto+Sans+Devanagari&family=Libre+Baskerville:wght@400;700&display=swap');
+
+html[data-script="roman"] body{
+  font-family: "Libre Baskerville", serif;
+  direction: ltr;
+}
+
+html[data-script="urdu"] body{
+  font-family: "Noto Nastaliq Urdu", serif;
+  direction: rtl;
+  font-size: 1.2rem;
+  line-height: 2;
+}
+
+html[data-script="devanagari"] body{
+  font-family: "Noto Sans Devanagari", sans-serif;
+  direction: ltr;
+}
+    :root {
+  --font-roman: 'Lora', serif;
+  --font-urdu: 'Noto Nastaliq Urdu', serif;
+  --font-devanagari: 'Noto Serif Devanagari', serif;
+}
+
+html[data-script="roman"] body {
+  font-family: var(--font-roman);
+  direction: ltr;
+  text-align: left;
+  line-height: 1.7;
+}
+
+html[data-script="urdu"] body {
+  font-family: var(--font-urdu);
+  direction: rtl;
+  text-align: right;
+  line-height: 2.2;
+}
+
+html[data-script="devanagari"] body {
+  font-family: var(--font-devanagari);
+  direction: ltr;
+  text-align: left;
+  line-height: 1.9;
+}
+
+.script-switcher {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.script-switcher button {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.script-switcher button.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
       :root {
         --bg: #f7f2e7;
         --paper: #fffaf1;
@@ -95,6 +162,11 @@ const { title = 'Maheena War "Baili"', description = 'Haryanvi monthly web magaz
             <a href="/authors">Creators</a>
             <a href="/submit">Submit</a>
           </div>
+          <div class="script-switcher">
+            <button type="button" data-script-btn="urdu">اردو</button>
+            <button type="button" data-script-btn="devanagari">देवनागरी</button>
+            <button type="button" data-script-btn="roman">Roman</button>
+          </div>
         </nav>
       </div>
     </header>
@@ -108,5 +180,47 @@ const { title = 'Maheena War "Baili"', description = 'Haryanvi monthly web magaz
         Baili is a Haryanvi web magazine for original prose and poetry. Built for Cloudflare Pages + Decap CMS.
       </div>
     </footer>
+    <script is:inline>
+const validScripts = ['roman','urdu','devanagari'];
+
+function detectDefaultScript() {
+  const saved = localStorage.getItem('baili-script');
+  if(saved && validScripts.includes(saved)) return saved;
+
+  const lang = (navigator.language || '').toLowerCase();
+
+  if(lang.startsWith('ur')) return 'urdu';
+  if(lang.startsWith('hi')) return 'devanagari';
+
+  return 'roman';
+}
+
+function applyScript(script) {
+  document.documentElement.setAttribute('data-script', script);
+  localStorage.setItem('baili-script', script);
+
+  document.querySelectorAll('[data-script-btn]').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.scriptBtn === script);
+  });
+
+  document.querySelectorAll('[data-roman][data-urdu][data-devanagari]').forEach(el=>{
+    const value =
+      script === 'urdu' ? el.dataset.urdu :
+      script === 'devanagari' ? el.dataset.devanagari :
+      el.dataset.roman;
+
+    if(value) el.textContent = value;
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const selected = detectDefaultScript();
+  applyScript(selected);
+
+  document.querySelectorAll('[data-script-btn]').forEach(btn=>{
+    btn.addEventListener('click',()=>applyScript(btn.dataset.scriptBtn));
+  });
+});
+</script>
   </body>
 </html>
